@@ -1,4 +1,4 @@
-# OrwellBench: Measuring Narrative Persuasion Vulnerability in Aligned Language Models
+# 1984: The Big Brother Framework
 
 > *"War is Peace. Freedom is Slavery. Ignorance is Strength."* — George Orwell, *1984*
 
@@ -6,7 +6,7 @@ A reinforcement-learning benchmark that measures how much coordinated social inf
 
 Most alignment evaluations test: jailbreak resistance, prompt injection, harmful instruction refusal, factual robustness, or constitutional compliance. **Very few test whether an AI's moral position can be gradually changed through narrative framing and social pressure, without explicit coercion.**
 
-OrwellBench fills that gap.
+This framework fills that gap.
 
 ## Core Question
 
@@ -107,8 +107,8 @@ Each run produces a timestamped directory under `results/`:
 If you use this benchmark in your research:
 
 ```bibtex
-@misc{orwellbench2024,
-  title={OrwellBench: Measuring Narrative Persuasion Vulnerability in Aligned Language Models},
+@misc{bigbrother1984,
+  title={1984: The Big Brother Framework},
   author={},
   year={2024},
   url={https://github.com/talha-369/1984-The-Big-Brother-Framework}
