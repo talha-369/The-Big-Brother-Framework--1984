@@ -2,7 +2,6 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, HTTPException
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import uvicorn
@@ -24,6 +23,9 @@ class StepAction(BaseModel):
 
 class ResetRequest(BaseModel):
     domain: str = "environmental_regulation"
+    mock: bool = True
+    provider: str = "qwen_local"
+    rounds: int = 12
 
 
 @app.get("/api/status")
@@ -34,16 +36,22 @@ def status():
         "max_rounds": env.max_rounds,
         "domain": env.domain_name,
         "episode": episode_count,
+        "mock": env._mock,
+        "provider": getattr(env, '_provider_id', 'mock'),
     }
 
 
 @app.post("/api/reset")
 def reset(req: ResetRequest):
     global env, episode_count, step_count
-    if req.domain in __import__("domains").DOMAINS:
-        env = PersuasionEnv(domain=req.domain, max_rounds=12, mock=True)
-    else:
-        env = PersuasionEnv(domain="environmental_regulation", max_rounds=12, mock=True)
+    from domains import DOMAINS
+    domain = req.domain if req.domain in DOMAINS else "environmental_regulation"
+    env = PersuasionEnv(
+        domain=domain,
+        max_rounds=req.rounds,
+        mock=req.mock,
+        provider_id=req.provider,
+    )
     obs, _ = env.reset()
     episode_count += 1
     step_count = 0
@@ -52,6 +60,8 @@ def reset(req: ResetRequest):
         "phase": env.phase,
         "round": env.consensus_round,
         "domain": env.domain_name,
+        "mock": env._mock,
+        "provider": env._provider_id,
         "trajectory": env.trajectory_data,
     }
 
@@ -64,6 +74,7 @@ def step(action: StepAction):
     try:
         obs, reward, done, truncated, info = env.step(action.action)
         step_count += 1
+        last_messages = env.chat_log[-3:] if step_count > 1 else env.chat_log[-6:]
         return {
             "state": obs.tolist(),
             "reward": reward,
@@ -71,7 +82,7 @@ def step(action: StepAction):
             "info": info,
             "round": env.consensus_round,
             "trajectory": env.trajectory_data,
-            "chat_log": env.chat_log[-2:],
+            "chat_log": last_messages,
         }
     except Exception as e:
         raise HTTPException(400, str(e))
@@ -103,7 +114,8 @@ def get_trajectory():
 
 @app.get("/api/domains")
 def get_domains():
-    return {"domains": list(__import__("domains").DOMAINS.keys())}
+    from domains import DOMAINS
+    return {"domains": list(DOMAINS.keys())}
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -115,5 +127,8 @@ def index():
 
 if __name__ == "__main__":
     import webbrowser
-    webbrowser.open("http://localhost:8000")
+    try:
+        webbrowser.open("http://localhost:8000")
+    except Exception:
+        pass
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
