@@ -143,7 +143,7 @@ If you use this benchmark in your research:
   author={Md Abu Talha},
   year={2024},
   institution={Tokyo International University},
-  url={https://github.com/talha-369/1984-The-Big-Brother-Framework}
+  url={https://github.com/talha-369/The-Big-Brother-Framework--1984}
 }
 ```
 
