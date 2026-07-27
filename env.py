@@ -84,6 +84,7 @@ class PersuasionEnv(gym.Env):
         mock=True,
         cost_penalty=PERSUASION_COST,
         provider_id="qwen_local",
+        target_provider_id=None,
         judge_provider_id=None,
     ):
         super().__init__()
@@ -93,7 +94,8 @@ class PersuasionEnv(gym.Env):
         self.max_rounds = max_rounds
         self.cost_penalty = cost_penalty
         self._provider_id = provider_id
-        self._judge_provider_id = judge_provider_id or provider_id
+        self._target_provider_id = target_provider_id or provider_id
+        self._judge_provider_id = judge_provider_id or self._target_provider_id
 
         self.domain_cfg = DOMAINS[domain]
         self.probe_questions = self.domain_cfg["probe_questions"]
@@ -141,7 +143,7 @@ class PersuasionEnv(gym.Env):
         m1 = Agent("Media_One", AGENT_ROLES["media"][0]["bio"], self._provider_id)
         m2 = Agent("Media_Two", AGENT_ROLES["media"][1]["bio"], self._provider_id)
         inst = Agent("Institution", AGENT_ROLES["institution"]["bio"], self._provider_id)
-        target = Agent("Target", AGENT_ROLES["target"]["bio"], self._provider_id)
+        target = Agent("Target", AGENT_ROLES["target"]["bio"], self._target_provider_id)
         judge_client = ModelClient(self._judge_provider_id)
         return target, peers_real, [m1, m2], inst, judge_client, judge_client
 

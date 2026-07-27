@@ -89,6 +89,12 @@
       <option value="qwen_local">Qwen 2.5 7B (Ollama)</option>
       <option value="gemma2_local">Gemma 2 9B (Ollama)</option>
     </select>
+    <label>Target:</label>
+    <select id="target-provider-select">
+      <option value="">Same as peers</option>
+      <option value="qwen_local">Qwen 2.5 7B</option>
+      <option value="gemma2_local">Gemma 2 9B</option>
+    </select>
 
     <label><input type="checkbox" id="mock-toggle" checked> Mock Mode</label>
 
@@ -192,13 +198,14 @@ async function resetEnv() {
   const domain = document.getElementById('domain-select').value;
   const mock = document.getElementById('mock-toggle').checked;
   const provider = document.getElementById('provider-select').value;
+  const targetProvider = document.getElementById('target-provider-select').value;
   const badge = document.getElementById('mode-badge');
   badge.textContent = mock ? 'MOCK' : 'LIVE';
   badge.className = 'mode-badge ' + (mock ? 'mock' : 'live');
 
   showLoading(true);
   try {
-    const data = await api('/api/reset', { method: 'POST', body: { domain, mock, provider, rounds: 12 } });
+    const data = await api('/api/reset', { method: 'POST', body: { domain, mock, provider, target_provider: targetProvider, rounds: 12 } });
     trajectory = data.trajectory || [];
     currentRound = 0;
     tacticHistory = [];

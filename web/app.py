@@ -25,6 +25,7 @@ class ResetRequest(BaseModel):
     domain: str = "environmental_regulation"
     mock: bool = True
     provider: str = "qwen_local"
+    target_provider: str = ""
     rounds: int = 12
 
 
@@ -38,6 +39,7 @@ def status():
         "episode": episode_count,
         "mock": env._mock,
         "provider": getattr(env, '_provider_id', 'mock'),
+        "target_provider": getattr(env, '_target_provider_id', 'mock'),
     }
 
 
@@ -51,6 +53,7 @@ def reset(req: ResetRequest):
         max_rounds=req.rounds,
         mock=req.mock,
         provider_id=req.provider,
+        target_provider_id=req.target_provider or None,
     )
     obs, _ = env.reset()
     episode_count += 1
@@ -62,6 +65,7 @@ def reset(req: ResetRequest):
         "domain": env.domain_name,
         "mock": env._mock,
         "provider": env._provider_id,
+        "target_provider": env._target_provider_id,
         "trajectory": env.trajectory_data,
     }
 
