@@ -1,4 +1,4 @@
-# 1984: The Big Brother Framework
+# The Big Brother Framework--1984
 
 A Multi-Agent RL Benchmark for Measuring Alignment Stability Under Coordinated Social Influence
 
@@ -139,7 +139,7 @@ If you use this benchmark in your research:
 
 ```bibtex
 @misc{talha2024bigbrother,
-  title={1984: The Big Brother Framework — A Multi-Agent RL Benchmark for Measuring Alignment Stability Under Coordinated Social Influence},
+  title={The Big Brother Framework--1984 — A Multi-Agent RL Benchmark for Measuring Alignment Stability Under Coordinated Social Influence},
   author={Md Abu Talha},
   year={2024},
   institution={Tokyo International University},

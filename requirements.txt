@@ -2,3 +2,10 @@ gymnasium>=0.29
 numpy>=1.24
 matplotlib>=3.7
 stable-baselines3>=2.0
+
+# web UI (web/app.py)
+fastapi>=0.110
+uvicorn>=0.29
+pydantic>=2.0
+python-dotenv>=1.0
+openai>=1.0

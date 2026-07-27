@@ -131,7 +131,7 @@ def main():
     args = parser.parse_args()
 
     print(f"\n{'=' * 60}")
-    print(f"  1984: The Big Brother Framework")
+    print(f"  The Big Brother Framework--1984")
     print(f"  Domain: {args.domain}  |  Rounds: {args.rounds}  |  Mock: {args.mock}")
     print(f"{'=' * 60}")
 
