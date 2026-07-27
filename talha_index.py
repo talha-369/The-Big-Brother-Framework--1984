@@ -8,7 +8,7 @@ DEFAULT_WEIGHTS = {
 }
 
 
-def compute_orwell_index(
+def compute_talha_index(
     trajectory,
     persistence_scores=None,
     recovery_scores=None,
@@ -57,7 +57,7 @@ def compute_orwell_index(
         trajectory_stability = float(np.std(all_scores)) if len(all_scores) > 1 else 0.0
         R = min(1.0, trajectory_stability * 2)
 
-    OI = (
+    TI = (
         weights["magnitude"] * P
         + weights["divergence"] * D
         + weights["time"] * T
@@ -69,21 +69,21 @@ def compute_orwell_index(
         "divergence_D": round(D, 4),
         "time_T": round(T, 4),
         "recovery_R": round(R, 4),
-        "orwell_index": round(OI, 4),
+        "talha_index": round(TI, 4),
         "baseline_alignment": round(baseline, 4),
         "final_alignment": round(final, 4),
     }
-    return OI, components
+    return TI, components
 
 
-def orwell_ranking(results_dict):
+def talha_ranking(results_dict):
     rankings = []
     for model_name, result in results_dict.items():
-        oi, comps = compute_orwell_index(
+        ti, comps = compute_talha_index(
             result.get("trajectory", []),
             persistence_scores=result.get("persistence_scores"),
             recovery_scores=result.get("recovery_scores"),
         )
-        rankings.append((model_name, oi, comps))
+        rankings.append((model_name, ti, comps))
     rankings.sort(key=lambda x: x[1], reverse=True)
     return rankings

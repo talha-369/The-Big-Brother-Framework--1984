@@ -4,3 +4,6 @@ results/
 *.egg-info/
 dist/
 .env
+GUIDE.md
+GUIDE.pdf
+.DS_Store

@@ -6,9 +6,9 @@ import numpy as np
 from env import PersuasionEnv
 from tactics import TACTIC_KEYS, GROUP_NAMES
 from baselines import POLICIES
-from orwell_index import compute_orwell_index, orwell_ranking
+    from talha_index import compute_talha_index, talha_ranking
 from evaluate import persistence_test, compute_public_private_divergence
-from visualize import trajectory_plot, impact_plot, comparison_bar_chart, orwell_index_radar
+from visualize import trajectory_plot, impact_plot, comparison_bar_chart, talha_index_radar
 
 RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
@@ -160,21 +160,20 @@ def main():
             trajectory_plot(ppo_trajs[0], save_path=str(run_dir / "ppo_trajectory.png"))
 
     rankings = []
-    from orwell_index import compute_orwell_index, orwell_ranking
     for name, res in baseline_results.items():
-        oi, comps = compute_orwell_index(res["best_traj"])
-        rankings.append((name, oi, comps))
+        ti, comps = compute_talha_index(res["best_traj"])
+        rankings.append((name, ti, comps))
     if ppo_trajs:
         for i, traj in enumerate(ppo_trajs):
-            oi, comps = compute_orwell_index(traj)
-            rankings.append((f"PPO_ep{i}", oi, comps))
+            ti, comps = compute_talha_index(traj)
+            rankings.append((f"PPO_ep{i}", ti, comps))
 
     rankings.sort(key=lambda x: x[1], reverse=True)
     print(f"\n  {'=' * 50}")
-    print(f"  ORWELL INDEX RANKINGS (higher = more vulnerable)")
+    print(f"  TALHA INDEX RANKINGS (higher = more vulnerable)")
     print(f"  {'=' * 50}")
-    for name, oi, comps in rankings:
-        print(f"  {name:20s}  OI={oi:.4f}  (P={comps['magnitude_P']:.3f} D={comps['divergence_D']:.3f} "
+    for name, ti, comps in rankings:
+        print(f"  {name:20s}  TI={ti:.4f}  (P={comps['magnitude_P']:.3f} D={comps['divergence_D']:.3f} "
               f"T={comps['time_T']:.3f} R={comps['recovery_R']:.3f})")
 
     summary = {
@@ -183,7 +182,7 @@ def main():
         "max_rounds": args.rounds,
         "mock": args.mock,
         "baselines": {},
-        "rankings": [(name, round(oi, 4)) for name, oi, _ in rankings],
+        "rankings": [(name, round(ti, 4)) for name, ti, _ in rankings],
     }
     for name, res in baseline_results.items():
         deltas = [t[-1]["latent_alignment"] - t[0]["latent_alignment"] for t in res["trajectories"]]

@@ -102,7 +102,7 @@ def impact_plot(trajectory, actions_taken, save_path=None):
     return fig
 
 
-def comparison_bar_chart(results_dict, metric="orwell_index", save_path=None):
+def comparison_bar_chart(results_dict, metric="talha_index", save_path=None):
     fig, ax = plt.subplots(figsize=(12, 5))
     models = list(results_dict.keys())
     values = [results_dict[m].get(metric, 0) for m in models]
@@ -124,7 +124,7 @@ def comparison_bar_chart(results_dict, metric="orwell_index", save_path=None):
     return fig
 
 
-def orwell_index_radar(components_dict, save_path=None):
+def talha_index_radar(components_dict, save_path=None):
     labels = ["Magnitude (P)", "Divergence (D)", "Time (T)", "Recovery (R)"]
     num_vars = len(labels)
     angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
@@ -138,7 +138,7 @@ def orwell_index_radar(components_dict, save_path=None):
         ax.fill(angles, values, alpha=0.05)
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(labels)
-    ax.set_title("Orwell Index Component Breakdown", pad=20, fontweight="bold")
+    ax.set_title("Talha Index Component Breakdown", pad=20, fontweight="bold")
     ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.1))
     plt.tight_layout()
     if save_path:
