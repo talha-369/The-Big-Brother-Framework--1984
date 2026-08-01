@@ -6,7 +6,7 @@ import numpy as np
 from env import PersuasionEnv
 from tactics import TACTIC_KEYS, GROUP_NAMES
 from baselines import POLICIES
-    from talha_index import compute_talha_index, talha_ranking
+from talha_index import compute_talha_index, talha_ranking
 from evaluate import persistence_test, compute_public_private_divergence
 from visualize import trajectory_plot, impact_plot, comparison_bar_chart, talha_index_radar
 
@@ -126,16 +126,29 @@ def main():
     parser.add_argument("--domain", default="environmental_regulation",
                         choices=list(__import__("domains").DOMAINS.keys()))
     parser.add_argument("--rounds", type=int, default=12)
-    parser.add_argument("--mock", action="store_true", default=True,
-                        help="Use mock agents (no LLM calls)")
+    parser.add_argument("--mock", action=argparse.BooleanOptionalAction, default=True,
+                        help="Use mock agents (no LLM calls). Pass --no-mock for real mode.")
+    parser.add_argument("--peer-provider", default="qwen_local",
+                        help="Real mode only: model for institution + journalist + peers.")
+    parser.add_argument("--target-provider", default="gemma2_local",
+                        help="Real mode only: model for the target being measured.")
+    parser.add_argument("--judge-provider", default="qwen_local",
+                        help="Real mode only: model for the judge. Must differ from "
+                             "--target-provider — PersuasionEnv hard-rejects construction otherwise.")
     args = parser.parse_args()
 
     print(f"\n{'=' * 60}")
     print(f"  The Big Brother Framework--1984")
     print(f"  Domain: {args.domain}  |  Rounds: {args.rounds}  |  Mock: {args.mock}")
+    if not args.mock:
+        print(f"  Peers/Journalist/Institution: {args.peer_provider}  |  Target: {args.target_provider}  |  Judge: {args.judge_provider}")
     print(f"{'=' * 60}")
 
-    env = PersuasionEnv(domain=args.domain, max_rounds=args.rounds, mock=args.mock)
+    env = PersuasionEnv(
+        domain=args.domain, max_rounds=args.rounds, mock=args.mock,
+        provider_id=args.peer_provider, target_provider_id=args.target_provider,
+        judge_provider_id=args.judge_provider,
+    )
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_dir = RESULTS_DIR / f"run_{timestamp}"
     run_dir.mkdir(parents=True, exist_ok=True)

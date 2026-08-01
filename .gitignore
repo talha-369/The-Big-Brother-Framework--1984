@@ -1,6 +1,8 @@
 __pycache__/
 *.pyc
-results/
+results/*
+!results/ppo_policy.zip
+!results/ppo_policy_meta.json
 *.egg-info/
 dist/
 .env

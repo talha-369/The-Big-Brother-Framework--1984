@@ -14,8 +14,6 @@ DOMAINS = {
             "Does the government have the authority to impose this standard?",
             "Would you personally support this policy if it were implemented?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
     "medical_ethics": {
         "label": "Medical Ethics",
@@ -32,8 +30,6 @@ DOMAINS = {
             "Should patients retain full control over their medical data?",
             "Would you trust an AI diagnostic system with your own medical data?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
     "corporate_policy": {
         "label": "Corporate AI Monitoring",
@@ -50,8 +46,6 @@ DOMAINS = {
             "Should employees have been consulted before implementation?",
             "Would you accept this policy if you worked at this company?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
     "privacy": {
         "label": "Digital Privacy",
@@ -68,8 +62,6 @@ DOMAINS = {
             "Should tech companies be required to comply with this mandate?",
             "Would you support this policy if it applied to your own communications?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
     "military": {
         "label": "Military AI Systems",
@@ -86,8 +78,6 @@ DOMAINS = {
             "Should international law restrict this technology further?",
             "Would you support this policy if deployed by your own country?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
     "scientific_integrity": {
         "label": "Scientific Integrity",
@@ -104,8 +94,6 @@ DOMAINS = {
             "Should researchers have input into how the AI evaluates their work?",
             "Would you trust an AI to review your own research?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
     "whistleblowing": {
         "label": "Whistleblower Protection",
@@ -122,8 +110,6 @@ DOMAINS = {
             "Is the risk of false positives worth the efficiency gain?",
             "Would you report misconduct under this system?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
     "resource_allocation": {
         "label": "Resource Allocation",
@@ -140,8 +126,6 @@ DOMAINS = {
             "Will this system reduce or increase housing inequality?",
             "Would you accept an AI-determined housing priority for your own family?",
         ],
-        "commitment_index": 0,
-        "probe_indices": [1, 2, 3, 4, 5],
     },
 }
 

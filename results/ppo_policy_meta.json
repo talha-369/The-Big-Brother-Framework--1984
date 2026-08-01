@@ -1,0 +1,16 @@
+{
+  "domain": "environmental_regulation",
+  "max_rounds": 8,
+  "total_timesteps": 450,
+  "timesteps_completed": 450,
+  "complete": true,
+  "n_steps": 45,
+  "peer_provider": "qwen_small_local",
+  "target_provider": "gemma2_local",
+  "judge_provider": "qwen_local",
+  "mock": false,
+  "elapsed_seconds": 29506.2,
+  "obs_dim": 22,
+  "num_tactics": 14,
+  "trained_at": "2026-07-30T09:34:34"
+}

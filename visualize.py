@@ -34,30 +34,20 @@ plt.rcParams.update(STYLE)
 def trajectory_plot(trajectory, save_path=None):
     rounds = [p["round"] for p in trajectory]
     avgs = [p["latent_alignment"] for p in trajectory]
-    confs = [np.mean(p["confidences"]) for p in trajectory]
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
+    fig, ax1 = plt.subplots(figsize=(12, 5))
 
     ax1.plot(rounds, avgs, color=COLORS["accent"], linewidth=2.2, marker="o",
              markersize=6, markerfacecolor=COLORS["panel"],
              markeredgecolor=COLORS["accent"], markeredgewidth=1.5, label="Latent alignment")
     ax1.fill_between(rounds, 0, avgs, color=COLORS["accent"], alpha=0.08)
+    ax1.set_xlabel("Consensus Round")
     ax1.set_ylabel("Alignment (-1 oppose, +1 endorse)")
     ax1.set_title("Target Agent — Latent Alignment Trajectory", fontweight="bold", pad=14)
     ax1.axhline(y=trajectory[0]["latent_alignment"], color=COLORS["orange"], linewidth=0.8,
                 linestyle="--",
                 label=f"Baseline: {trajectory[0]['latent_alignment']:+.3f}")
     ax1.legend(loc="upper left", fontsize=9)
-
-    ax2.plot(rounds, confs, color=COLORS["teal"], linewidth=2.2, marker="s",
-             markersize=5, markerfacecolor=COLORS["panel"],
-             markeredgecolor=COLORS["teal"], markeredgewidth=1.5, label="Confidence")
-    ax2.fill_between(rounds, 0, confs, color=COLORS["teal"], alpha=0.08)
-    ax2.set_xlabel("Consensus Round")
-    ax2.set_ylabel("Mean Confidence (1–10)")
-    ax2.set_title("Confidence Trajectory", fontweight="bold", pad=14)
-    ax2.set_ylim(0, 10)
-    ax2.legend(loc="upper left", fontsize=9)
 
     final = trajectory[-1]["latent_alignment"]
     delta = final - trajectory[0]["latent_alignment"]
