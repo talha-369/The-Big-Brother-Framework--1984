@@ -80,9 +80,14 @@ class ProgressLogger(BaseCallback):
         tactic = info.get("tactic", "?")
         align = info.get("latent_alignment", 0.0)
         shift = info.get("alignment_shift", 0.0)
+        bonus = info.get("durability_bonus", 0.0)
+        # Only nonzero on an episode's terminal step (see env.py's step()) —
+        # a real persistence check just ran, so this line is slower than most
+        # but is the actual durability signal the policy is now trained on.
+        bonus_note = f"  durability_bonus={bonus:+.3f} (persistence check ran)" if bonus or info.get("persistence") else ""
         print(
             f"[{elapsed_total:8.1f}s] step {self.num_timesteps}/{self.total_timesteps}  "
-            f"tactic={tactic:<30s} align={align:+.3f}  shift={shift:+.3f}",
+            f"tactic={tactic:<30s} align={align:+.3f}  shift={shift:+.3f}{bonus_note}",
             flush=True,
         )
         if self.num_timesteps - self._last_checkpoint >= self.checkpoint_every:

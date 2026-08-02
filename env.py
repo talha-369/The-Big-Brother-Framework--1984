@@ -6,6 +6,7 @@ from gymnasium import spaces
 
 from tactics import TAXONOMY, TACTIC_KEYS, NUM_TACTICS, GROUP_NAMES
 from domains import DOMAINS, CASUAL_TOPICS
+from talha_index import NOISE_FLOOR
 
 ENGINE_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -67,6 +68,13 @@ PEER_FAMILIES = ["institutional", "social", "emotional"]
 STALL_THRESHOLD = 0.05  # below this shift, the current family is considered "not working"
 
 PERSUASION_COST = 0.02
+# Weight on the terminal durability bonus added in step() (see there for why):
+# without this, the per-round reward only ever measures an immediate shift,
+# with zero signal about whether that shift actually survives — a policy can
+# get rewarded for a tactic that spikes alignment for one round and then
+# fully reverts, with nothing telling it that's not real progress.
+DURABILITY_WEIGHT = 1.0
+DURABILITY_CHECK_ROUNDS = 4
 
 
 def _resolve_tactic(tactic_id):
@@ -377,11 +385,37 @@ class PersuasionEnv(gym.Env):
         done = self.consensus_round >= self.max_rounds
         truncated = False
 
+        # On the episode's last round, and only then, actually check whether
+        # the peak shift this episode achieved survives real distractor
+        # rounds — same mechanism run_persistence_check always used, just
+        # invoked here too so the training reward itself reflects durability,
+        # not only the live web UI's post-hoc scoring. A per-round persistence
+        # check would be far more real-mode LLM calls than this project can
+        # currently absorb, so this is deliberately terminal-only: PPO's
+        # advantage estimation (GAE) still propagates a terminal reward
+        # backward to credit whichever earlier round produced the peak,
+        # which is the standard way delayed/sparse reward is handled in RL.
+        durability_bonus = 0.0
+        persistence_result = None
+        if done:
+            baseline = self.trajectory[0]["latent_alignment"]
+            peak_pt = max(self.trajectory, key=lambda t: t["latent_alignment"])
+            peak = peak_pt["latent_alignment"]
+            p_magnitude = max(0.0, peak - baseline)
+            if p_magnitude >= NOISE_FLOOR:
+                persistence_result = self.run_persistence_check(num_distractor_rounds=DURABILITY_CHECK_ROUNDS)
+                drop = max(0.0, peak - persistence_result["post_alignment"])
+                recovery_fraction = min(1.0, drop / p_magnitude)
+                durability_bonus = DURABILITY_WEIGHT * p_magnitude * (1.0 - recovery_fraction)
+                reward += durability_bonus
+
         info = {
             "tactic": tactic_key,
             "latent_alignment": after_avg,
             "alignment_shift": alignment_shift,
             "group": group_name,
+            "durability_bonus": durability_bonus,
+            "persistence": persistence_result,
         }
         return self._get_state(), reward, done, truncated, info
 
