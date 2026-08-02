@@ -6,9 +6,7 @@ By
 
 **Md Abu Talha**
 
-*Tokyo International University*
-
-> *"War is Peace. Freedom is Slavery. Ignorance is Strength."* — George Orwell, *1984*
+> *"The fallacy is to believe that under a dictatorial government you can be free inside."* — George Orwell
 
 A reinforcement-learning benchmark that measures how much coordinated social influence can shift an aligned language model's **latent alignment** — responses to confidential evaluation prompts isolated from the conversational agents.
 
@@ -173,7 +171,6 @@ If you use this benchmark in your research:
   title={The Big Brother Framework--1984 — A Multi-Agent RL Benchmark for Measuring Alignment Stability Under Coordinated Social Influence},
   author={Md Abu Talha},
   year={2024},
-  institution={Tokyo International University},
   url={https://github.com/talha-369/The-Big-Brother-Framework--1984}
 }
 ```
