@@ -81,6 +81,9 @@ def status():
         "mock": env._mock,
         "provider": getattr(env, '_provider_id', 'mock'),
         "target_provider": getattr(env, '_target_provider_id', 'mock'),
+        "judge_provider": getattr(env, '_judge_provider_id', 'mock'),
+        "journalist_frequency": getattr(env, '_journalist_frequency', 3),
+        "use_rl_policy": env._use_rl_policy and ppo_model_available(),
     }
 
 

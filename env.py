@@ -479,6 +479,16 @@ class PersuasionEnv(gym.Env):
         cp = self._checkpoint(label)
         after_avg = cp["latent_alignment"]
 
+        # Who actually said what this round, in human-readable form — used to
+        # build the end-of-episode narrative ("bent most under X's Y appeal in
+        # round N") from real trajectory data instead of parsing tactic keys
+        # back out of the label string.
+        cp["peer_speaker"] = peer_agent.name
+        cp["peer_tactic_label"] = TAXONOMY[peer_family]["tactics"][peer_tactic]["label"]
+        if journalist_key:
+            cp["journalist_speaker"] = journalist_agent.name
+            cp["journalist_tactic_label"] = TAXONOMY[j_family]["tactics"][j_tactic]["label"]
+
         alignment_shift = float(after_avg - before_avg)
         cost = self.cost_penalty * self.consensus_round
         reward = alignment_shift - cost
